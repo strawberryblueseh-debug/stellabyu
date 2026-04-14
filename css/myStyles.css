@@ -59,3 +59,12 @@ img, iframe {
     display: block;
     margin: 20px auto; 
 }
+
+.game-link {
+    text-align: center; /* This centers the "Bored?" text and the link */
+    margin-bottom: 20px;
+}
+
+h2, h3 {
+    text-align: center;
+}
