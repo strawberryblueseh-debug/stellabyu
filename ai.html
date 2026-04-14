@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Dodge the Blocks ✨</title>
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      color: white;
+    }
+
+    #game {
+      position: relative;
+      width: 400px;
+      height: 600px;
+      background: rgba(0,0,0,0.3);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+    }
+
+    #player {
+      position: absolute;
+      bottom: 15px;
+      left: 180px;
+      width: 45px;
+      height: 45px;
+      background: linear-gradient(135deg, #00f260, #0575e6);
+      border-radius: 12px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+      transition: transform 0.1s;
+    }
+
+    #player:active {
+      transform: scale(0.9);
+    }
+
+    .block {
+      position: absolute;
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, #ff416c, #ff4b2b);
+      border-radius: 10px;
+      box-shadow: 0 5px 10px rgba(0,0,0,0.3);
+    }
+
+    #score {
+      position: absolute;
+      top: 10px;
+      left: 15px;
+      font-size: 20px;
+      font-weight: bold;
+    }
+
+    #gameOver {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      display: none;
+    }
+
+    #gameOver h2 {
+      margin-bottom: 10px;
+    }
+
+    button {
+      padding: 10px 18px;
+      border: none;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #00f260, #0575e6);
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+      transition: transform 0.2s, opacity 0.2s;
+    }
+
+    button:hover {
+      transform: scale(1.05);
+      opacity: 0.9;
+    }
+
+    .title {
+      position: absolute;
+      top: -45px;
+      width: 100%;
+      text-align: center;
+      font-size: 22px;
+      font-weight: bold;
+      letter-spacing: 1px;
+    }
+  </style>
+</head>
+<body>
+  <div id="game">
+    <div class="title">✨ Dodge the Blocks ✨</div>
+    <div id="score">Score: 0</div>
+    <div id="player"></div>
+    <div id="gameOver">
+      <h2>💀 Game Over</h2>
+      <button onclick="restartGame()">Play Again</button>
+    </div>
+  </div>
+
+  <script>
+    const player = document.getElementById('player');
+    const game = document.getElementById('game');
+    const scoreDisplay = document.getElementById('score');
+    const gameOverScreen = document.getElementById('gameOver');
+
+    let playerX = 180;
+    let blocks = [];
+    let score = 0;
+    let gameRunning = true;
+
+    document.addEventListener('keydown', (e) => {
+      if (!gameRunning) return;
+
+      if (e.key === 'ArrowLeft' && playerX > 0) {
+        playerX -= 25;
+      }
+      if (e.key === 'ArrowRight' && playerX < 355) {
+        playerX += 25;
+      }
+      player.style.left = playerX + 'px';
+    });
+
+    function createBlock() {
+      const block = document.createElement('div');
+      block.classList.add('block');
+      block.style.left = Math.floor(Math.random() * 10) * 40 + 'px';
+      block.style.top = '0px';
+      game.appendChild(block);
+      blocks.push(block);
+    }
+
+    function moveBlocks() {
+      blocks.forEach((block, index) => {
+        let top = parseInt(block.style.top);
+        block.style.top = top + 6 + 'px';
+
+        if (top > 540 && Math.abs(parseInt(block.style.left) - playerX) < 40) {
+          endGame();
+        }
+
+        if (top > 600) {
+          block.remove();
+          blocks.splice(index, 1);
+          score++;
+          scoreDisplay.textContent = 'Score: ' + score;
+        }
+      });
+    }
+
+    function gameLoop() {
+      if (!gameRunning) return;
+      moveBlocks();
+      requestAnimationFrame(gameLoop);
+    }
+
+    function spawnLoop() {
+      if (!gameRunning) return;
+      createBlock();
+      setTimeout(spawnLoop, Math.max(300, 800 - score * 10));
+    }
+
+    function endGame() {
+      gameRunning = false;
+      gameOverScreen.style.display = 'block';
+    }
+
+    function restartGame() {
+      blocks.forEach(b => b.remove());
+      blocks = [];
+      score = 0;
+      playerX = 180;
+      player.style.left = playerX + 'px';
+      scoreDisplay.textContent = 'Score: 0';
+      gameRunning = true;
+      gameOverScreen.style.display = 'none';
+      gameLoop();
+      spawnLoop();
+    }
+
+    gameLoop();
+    spawnLoop();
+  </script>
+</body>
+</html>
