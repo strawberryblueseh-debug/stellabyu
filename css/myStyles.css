@@ -29,13 +29,6 @@ body {
 }
 
 
-.data-section {
-    padding: 20px;
-    background-color: #fce7f3;
-    border-radius: 15px;
-}
-
-
 #top {
     text-decoration: none;
     text-transform: uppercase;
@@ -53,7 +46,6 @@ body {
 .data-section {
     width: 90%;
     margin: 20px auto;
-    overflow: hidden; 
     background-color: white;
     padding: 20px;
     border-radius: 15px;
