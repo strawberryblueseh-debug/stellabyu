@@ -27,11 +27,12 @@ body {
     box-shadow: 5px 5px 15px rgba(0,0,0,0.05);
     color: #be185d; 
     margin-bottom: 20px;
-    .content-block ol, .content-block ul {
-    margin-left: 20px;
 }
 
-
+  .content-block ol, .content-block ul {
+    margin-left: 20px;
+  }
+  
 #top {
     text-decoration: none;
     text-transform: uppercase;
